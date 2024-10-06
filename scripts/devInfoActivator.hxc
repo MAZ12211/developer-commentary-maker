@@ -1,0 +1,85 @@
+/* 
+    I would love if there is autoimport for this stuff because it's tedious to import these in every file
+    unlike CNE where you didn't have to import PlayState or freeplay state
+    Might get used to it later via muscle memory
+    But hey at least it doesn't crash the game
+*/
+import funkin.modding.events.ScriptEvent;
+import funkin.modding.module.Module;
+import funkin.play.PlayState;
+import funkin.play.scoring.Scoring;
+import funkin.modding.module.ModuleHandler;
+import funkin.graphics.FunkinCamera;
+import funkin.modding.module.Module;
+import funkin.ui.freeplay.FreeplayState;
+import funkin.play.PlayState;
+import funkin.graphics.FunkinSprite;
+import funkin.play.components.HealthIcon;
+import funkin.audio.FunkinSound;
+import funkin.ui.debug.charting.ChartEditorState;
+import funkin.Paths;
+import funkin.PlayerSettings;
+import flixel.util.FlxTimer;
+import funkin.play.PauseSubState;
+import flixel.FlxG;
+import Std;
+import funkin.ui.freeplay.FreeplayState;
+import funkin.play.PlayStatePlaylist;
+import funkin.ui.AtlasText;
+import funkin.modding.base.ScriptedMusicBeatSubState;
+import funkin.ui.MusicBeatSubState;
+import funkin.play.GameOverSubState;
+import funkin.Paths;
+import funkin.util.assets.DataAssets;
+import funkin.audio.FunkinSound;
+import funkin.util.MemoryUtil;
+import haxe.ds.StringMap;
+import funkin.save.Save;
+import Array;
+import String;
+import flixel.text.FlxText;
+import flixel.text.FlxTextBorderStyle;
+import funkin.modding.module.ModuleHandler;
+import funkin.Assets;
+
+class devInfoActivator extends Module {
+    var game = PlayState.instance; // Meant for pause menu
+
+	public function new() {
+		super("devInfoActivator", 2);
+	}
+
+    override function onSubStateOpenBegin(event) {
+		var state = event.targetState;
+
+		if (Std.isOfType(state, PauseSubState)) {
+			state.persistentUpdate = false;
+			state.openCallback = ()->{
+				// post state create
+				var menuEntries = state.currentMenuEntries;
+				menuEntries.insert(menuEntries.length - 2, {
+					text: "Developer Commentary",
+					callback: ()->{
+						var substate = ScriptedMusicBeatSubState.init('devInfoSubstate');
+						substate.cameras = state.cameras;
+				
+						state.menuEntryText.exists = false;
+						state.metadata.exists = false;
+						substate.closeCallback = ()->{
+							state.menuEntryText.exists = true;
+							state.metadata.exists = true;
+							trace("substate closed");
+						}
+						
+						state.openSubState(substate);
+					}
+				});
+				
+				state.clearAndAddMenuEntries();
+				state.changeSelection();
+			}
+		}
+		
+		super.onSubStateOpenBegin(event);
+	}
+}

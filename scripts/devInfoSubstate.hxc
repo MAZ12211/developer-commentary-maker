@@ -1,0 +1,221 @@
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.util.FlxSave;
+import flixel.text.FlxTextBorderStyle;
+import flixel.math.FlxMath;
+import flixel.tweens.FlxTween;
+import funkin.graphics.FunkinSprite;
+import flixel.tweens.FlxEase;
+
+import funkin.audio.FunkinSound;
+
+import funkin.ui.TextMenuList;
+import funkin.ui.TextMenuItem;
+
+import funkin.ui.MusicBeatSubState;
+
+import flixel.text.FlxText;
+import funkin.Assets;
+import funkin.Paths;
+
+import funkin.play.song.Song;
+import funkin.data.song.SongRegistry;
+import funkin.play.PlayState;
+import funkin.modding.module.Module;
+import flixel.util.FlxSave;
+import funkin.util.assets.DataAssets;
+import haxe.ds.StringMap;
+import Std;
+import Array;
+import String;
+import funkin.util.tools.StringTools;
+import flixel.text.FlxTextBorderStyle;
+import funkin.play.PauseSubState;
+import funkin.modding.PolymodErrorHandler;
+import haxe.Json;
+
+class devInfoSubstate extends MusicBeatSubState
+{
+	var authors:FlxText; // Person(s) who wrote the commentary
+	var infoText:FlxText; // Commentary text
+	var game = PlayState.instance;
+
+	var jsonPath:String = Paths.json("songs/" + game.currentSong.id + "/" + game.currentChart.difficulty + "-devCom"); // data/songs/songID/difficulty-devCom.json
+	var jsonData; // Shortcut to Json.parse(Assets.getText(jsonPath))
+
+	var authorsData:String; // Shortcut to Json.parse(Assets.getText(jsonPath)).authors
+	var textData:String; // Shortcut to Json.parse(Assets.getText(jsonPath)).text
+	var imagesData:Array; // Shortcut to Json.parse(Assets.getText(jsonPath)).images
+
+	// Array for storing the images
+	var imagesArray:Array<FlxSprite> = [];
+	// Array for storing their descriptions
+	/*
+	There's probably a smarter way to do this with maps or something but I have no clue if hscript supports or not
+	either way it's too much trouble to figure out (took a while to implement it)
+	*/
+	var imgDescs:Array<FlxText> = [];
+
+	var defaultXpos = 20; // Default X position for hud placement
+	var defaultYpos = 15; // Default Y position for hud placement
+	var fadeInTimer = 1.8; // How long it takes for the text and images to fade in
+
+	var allowInput_ = false; // Used to prevent inputs while the text is fading in (copied from source code)
+	
+	public function new() {
+		super("devInfoSubstate", 3);
+	}
+
+	public override function create():Void {
+		super.create();
+		authors = new FlxText(defaultXpos, defaultYpos, FlxG.width - 20, null, null);
+		authors.setFormat(Paths.font("vcr.ttf"), 18, 0xFFffffff, "left");
+		authors.scrollFactor.set(0, 0);
+		authors.wordWrap = false;
+		authors.alpha = 0;
+		add(authors);
+
+		infoText = new FlxText(defaultXpos, defaultYpos + authors.height + 10, FlxG.width - 20, null, null);
+		infoText.setFormat(Paths.font("vcr.ttf"), 24, 0xFFffffff, "left");
+		infoText.scrollFactor.set(0, 0);
+		infoText.wordWrap = false;
+		infoText.alpha = 0;
+
+		if (game != null && Assets.exists(jsonPath)) {
+			jsonData = Json.parse(Assets.getText(jsonPath));
+
+			authorsData = jsonData.authors;
+			textData = jsonData.text;
+			imagesData = jsonData.images;
+			/*
+			* I used `PolymodErrorHandler.showAlert()` as an alternative to calling `trace()`
+			* because as far as I'm concerned (I've tested this several times), it's impossible to debug hscript scripts in 0.5.1
+			* https://github.com/FunkinCrew/Funkin/issues/3497
+			*/
+
+			// Check for author data (defaulted to "unknown")
+			if (authorsData != null) authors.text = "Written by " + authorsData;
+			else authors.text = "Written by unknown";
+
+			// Check for text data
+			if (textData != null) {
+				infoText.text = textData;
+				add(infoText);
+			} else {
+				// Error message if there's no text
+				PolymodErrorHandler.showAlert('Text Error', "No text data found in " + jsonPath);
+			}
+
+			// Check if your json file has images
+			if (imagesData != null) {
+				var imgXPos = defaultXpos + 50; // 50px left padding so description text doesn't go out of bounds
+				var imgYPos = defaultYpos + infoText.height + 30;
+				for (image in imagesData) {
+					// Check for image path
+					var imgPath = Paths.file("data/songs/" + game.currentSong.id + "/" + image.path + ".png");
+					if (Assets.exists(imgPath)) {
+						/*
+						* If you didn't set an X and Y position for the image,
+						* it will be at the bottom of the block of text (not recommended though because it's not reliable)
+						*/
+						var img = new FlxSprite(
+							(image.x != null) ? image.x : imgXPos,
+							(image.y != null) ? image.y : imgYPos
+						);
+						img.alpha = 0;
+						img.loadGraphic(imgPath);
+						imagesArray.push(img);
+						add(img);
+						// Vertical spacing between images (very janky way of doing it but it works)
+						// It won't apply if you specify a Y position
+						imgYPos = img.y + img.height * 1.4;
+
+						// Checks if your json file has image descriptions
+						if (image.desc != null) {
+							var imgDesc = new FlxText(0, 0, FlxG.width - 20, null, null);
+							imgDesc.setFormat(Paths.font("vcr.ttf"), 20, 0xFFffffff, "center");
+							imgDesc.scrollFactor.set(0, 0);
+							imgDesc.wordWrap = false;
+
+							imgDesc.x = img.x + (img.width - imgDesc.width) / 2; // Center text
+							imgDesc.y = img.y + img.height + 5; // 5px up padding
+							imgDesc.text = image.desc; // will look for description text in an image
+							imgDesc.alpha = 0;
+							imgDescs.push(imgDesc);
+							add(imgDesc);
+						} else {
+							// Error message if it can't find an image description
+							PolymodErrorHandler.showAlert('Image Description Error', "Couldn't find " + image.path + "'s " + "description text in " + jsonPath);
+						}
+
+					} else {
+						// Error message if it can't find an image (wrong name or path)
+						PolymodErrorHandler.showAlert('Image(s) not found', "Couldn't find " + image.path + " in " + Paths.file("songs/" + game.currentSong.id) + "\nDid you double check the names and the path?" + "\nImage format must be png.");
+					}
+				}
+
+			} else {
+				// Error message if there's no images in the json file
+				PolymodErrorHandler.showAlert('JSON file has no images', "No images data found in " + jsonPath + "\nIs this intentional?");
+			}
+
+		} else {
+			// Error message if the JSON file isn't found in the proper path
+			// TODO: Remove this and replace it with a gameplay indicator instead
+			PolymodErrorHandler.showAlert('JSON file not found', "Couldn't find " + game.currentChart.difficulty + "-devCom" + ".json in " + jsonPath);
+			super.close(); // Close the substate after viewing the error
+		}
+
+		function tweenIn(obj, fadeInTimer:Float) {
+			FlxTween.tween(obj, {alpha: 1, y: obj.y + 5}, fadeInTimer, {ease: FlxEase.quartOut, onComplete: function(_) {
+				allowInput_ = true;
+			}});
+		}
+		// They're placed here just for organization
+		tweenIn(authors, fadeInTimer);
+		tweenIn(infoText, fadeInTimer);
+		for (img in imagesArray) tweenIn(img, fadeInTimer);
+		for (imgDesc in imgDescs) tweenIn(imgDesc, fadeInTimer);
+
+	}
+
+	public override function update(elapsed:Float):Void {
+		super.update(elapsed);
+		if (!allowInput_) return;
+
+		if (controls.UI_UP && authors.y <= defaultYpos /*So you wouldn't be able to scroll past the top*/) {
+			authors.y += 5 * 60 * elapsed; // No null check because it's added even if you forgot to have it in your json file (defaulted to "unknown" again)
+			infoText.y += 5 * 60 * elapsed; // No null check because there's no point if there'll be an error message
+			for (imgDesc in imgDescs) if (imgDesc != null) imgDesc.y += 5 * 60 * elapsed; // Null check here is necessary because you can have an image without alt description
+			for (img in imagesArray) if (img != null) img.y += 5 * 60 * elapsed; // Same point
+		}
+		if (controls.UI_DOWN) {
+			authors.y -= 5 * 60 * elapsed;
+			infoText.y -= 5 * 60 * elapsed;
+			for (imgDesc in imgDescs) if (imgDesc != null) imgDesc.y -= 5 * 60 * elapsed;
+			for (img in imagesArray) if (img != null) img.y -= 5 * 60 * elapsed;
+		}
+
+		if (controls.BACK) {
+			FunkinSound.playOnce(Paths.sound("chartingSounds/noteErase"));
+			super.close();
+		}
+	}
+
+}
+
+/* GB Draft description:
+	This is a utility mod that lets modders/moddevs add their own dev commentaries to any song in the mod without too much setup and code.
+	Initially, this was meant for charters only.
+	Later on, I decided it was best to just make it for everyone to use.
+
+	This is difficulty dependent though meaning you can make the dev commentary from the easy difficulty be different from the hard difficulty.
+	This is done in charters' favor to comment on (for example) their favorite charting moments in the song
+	or how they placed the mines cleverly in the song to be enjoyable/satisfying for the player
+	or how they handled charting multiple difficulties.
+
+	This is also because of Erect and Nightmare (or alternative variation) difficulties that may have different music and visuals. (it can be tedious to copy paste the same json file for normal difficulties though! Sorry about that!)
+
+	To use:
+	1. Create a json file in the songs folder that has the same name as the song you want to add dev commentary to
+*/

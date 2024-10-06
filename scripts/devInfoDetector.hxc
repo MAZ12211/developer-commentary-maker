@@ -1,0 +1,73 @@
+/* 
+    I would love if there is autoimport for this stuff because it's tedious to import these in every file
+    unlike CNE where you didn't have to import PlayState or freeplay state
+    Might get used to it later via muscle memory
+    But hey at least it doesn't crash the game
+*/
+import funkin.modding.events.ScriptEvent;
+import funkin.modding.module.Module;
+import funkin.play.scoring.Scoring;
+import funkin.graphics.FunkinCamera;
+import funkin.modding.module.Module;
+import funkin.ui.freeplay.FreeplayState;
+import funkin.play.PlayState;
+import funkin.graphics.FunkinSprite;
+import funkin.play.components.HealthIcon;
+import funkin.audio.FunkinSound;
+import funkin.ui.debug.charting.ChartEditorState;
+import funkin.PlayerSettings;
+import funkin.play.PauseSubState;
+import flixel.FlxG;
+import Std;
+import funkin.ui.freeplay.FreeplayState;
+import funkin.modding.base.ScriptedMusicBeatSubState;
+import funkin.ui.MusicBeatSubState;
+import funkin.play.GameOverSubState;
+import funkin.Paths;
+import funkin.util.assets.DataAssets;
+import funkin.audio.FunkinSound;
+import funkin.util.MemoryUtil;
+import haxe.ds.StringMap;
+import funkin.save.Save;
+import Array;
+import String;
+import flixel.text.FlxText;
+import flixel.text.FlxTextBorderStyle;
+import funkin.modding.module.ModuleHandler;
+import funkin.Assets;
+import funkin.modding.PolymodErrorHandler;
+
+/*
+	* Used to detect if there is a dev commentary in the current song playing in the game (by finding json path)
+	* If found, there'll be an icon in the game at the bottom left to tell you it exists in the pause menu
+	* If there isn't, icon will be removed and the devInfoActivator module will be disabled 
+	* which means you won't be able access the dev info substate
+*/
+class devInfoDetector extends Module {
+    var game:PlayState;
+	var testSprite:FunkinSprite;
+	var jsonPath;
+
+	public function new() {
+		super("devInfoDetector", 1);
+	}
+
+	public override function onSongLoaded(e) {
+        super.onSongLoaded(e);
+		// I genuinely have no clue how to put stuff to PlayState
+		// I just copied it from another script
+		// The method I used before no longer works, so I copied this from another script and now it works?
+		game = PlayState.instance;
+		jsonPath = Paths.json("songs/" + game.currentSong.id + "/" + game.currentChart.difficulty + "-devCom");
+		testSprite = new FunkinSprite(30, FlxG.height - 100);
+		testSprite.loadTexture("devInfoIcon"); // Icon from FlatIcon (https://www.flaticon.com/free-icon/comment_3193015?term=message+bubble&related_id=3193015)
+		testSprite.alpha = Assets.exists(jsonPath) ? 0.7 : 0; // This bugs out if you change the difficulty in the pause menu
+		testSprite.zIndex = game.camHUD.zIndex + 1000;
+		testSprite.scrollFactor.set(0, 0);
+		testSprite.cameras = [game.camHUD];
+		game.add(testSprite);
+
+		if (Assets.exists(jsonPath)) ModuleHandler.activateModule('devInfoActivator');
+		else ModuleHandler.deactivateModule('devInfoActivator');
+    }
+}
