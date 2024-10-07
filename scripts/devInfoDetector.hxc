@@ -54,14 +54,11 @@ class devInfoDetector extends Module {
 
 	public override function onSongLoaded(e) {
         super.onSongLoaded(e);
-		// I genuinely have no clue how to put stuff to PlayState
-		// I just copied it from another script
-		// The method I used before no longer works, so I copied this from another script and now it works?
 		game = PlayState.instance;
-		jsonPath = Paths.json("songs/" + game.currentSong.id + "/" + game.currentChart.difficulty + "-devCom");
+		jsonPath = Paths.json("songs/" + game.currentSong.id + "/dev-commentaries/" + game.currentChart.difficulty + (game.currentChart.variation != null ? "-" + game.currentChart.variation : "") + "-devCom");
 		testSprite = new FunkinSprite(30, FlxG.height - 100);
 		testSprite.loadTexture("devInfoIcon"); // Icon from FlatIcon (https://www.flaticon.com/free-icon/comment_3193015?term=message+bubble&related_id=3193015)
-		testSprite.alpha = Assets.exists(jsonPath) ? 0.7 : 0; // This bugs out if you change the difficulty in the pause menu
+		checkAlpha(); // This bugs out if you change the difficulty in the pause menu
 		testSprite.zIndex = game.camHUD.zIndex + 1000;
 		testSprite.scrollFactor.set(0, 0);
 		testSprite.cameras = [game.camHUD];
@@ -70,4 +67,14 @@ class devInfoDetector extends Module {
 		if (Assets.exists(jsonPath)) ModuleHandler.activateModule('devInfoActivator');
 		else ModuleHandler.deactivateModule('devInfoActivator');
     }
+
+	public override function onSongRetry(e) {
+		super.onSongRetry(e);
+		checkAlpha();
+	}
+
+	function checkAlpha() {
+		testSprite.alpha = Assets.exists(jsonPath) ? 0.7 : 0;
+		// PolymodErrorHandler.showAlert("testSprite Alpha", testSprite.alpha); // An alternative to calling trace() since that's not available in 0.5.1
+	}
 }

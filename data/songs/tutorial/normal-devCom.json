@@ -1,7 +1,0 @@
-{
-	"authors": "Replace this with who wrote the commentary",
-	"commentary": "most of your time is spent in here. Make sure to use \n to create a new line like what just happened now with this one.",
-	"images": [
-		{"path": "image1", "desc": "This is a description text that will show up below this image.", "x": 100, "y":100}
-	]
-}
