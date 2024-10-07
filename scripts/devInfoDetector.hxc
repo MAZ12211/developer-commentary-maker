@@ -45,8 +45,8 @@ import funkin.modding.PolymodErrorHandler;
 */
 class devInfoDetector extends Module {
     var game:PlayState;
-	var testSprite:FunkinSprite;
-	var jsonPath;
+	var game_indiSprite:FunkinSprite;
+	var jsonPath:String;
 
 	public function new() {
 		super("devInfoDetector", 1);
@@ -56,25 +56,24 @@ class devInfoDetector extends Module {
         super.onSongLoaded(e);
 		game = PlayState.instance;
 		jsonPath = Paths.json("songs/" + game.currentSong.id + "/dev-commentaries/" + game.currentChart.difficulty + (game.currentChart.variation != null ? "-" + game.currentChart.variation : "") + "-devCom");
-		testSprite = new FunkinSprite(30, FlxG.height - 100);
-		testSprite.loadTexture("devInfoIcon"); // Icon from FlatIcon (https://www.flaticon.com/free-icon/comment_3193015?term=message+bubble&related_id=3193015)
-		checkAlpha(); // This bugs out if you change the difficulty in the pause menu
-		testSprite.zIndex = game.camHUD.zIndex + 1000;
-		testSprite.scrollFactor.set(0, 0);
-		testSprite.cameras = [game.camHUD];
-		game.add(testSprite);
-
-		if (Assets.exists(jsonPath)) ModuleHandler.activateModule('devInfoActivator');
-		else ModuleHandler.deactivateModule('devInfoActivator');
+		if (Assets.exists(jsonPath)) {
+			game_indiSprite = new FunkinSprite(30, FlxG.height - 100);
+			game_indiSprite.loadTexture("devInfoIcon"); // Icon from FlatIcon (https://www.flaticon.com/free-icon/comment_3193015?term=message+bubble&related_id=3193015)
+			if (game_indiSprite != null) game_indiSprite.alpha = 0.7; // This bugs out if you change the difficulty in the pause menu
+			game_indiSprite.zIndex = game.camHUD.zIndex + 1000;
+			game_indiSprite.scrollFactor.set(0, 0);
+			game_indiSprite.cameras = [game.camHUD];
+			game.add(game_indiSprite);
+			ModuleHandler.activateModule('devInfoActivator');
+		} else {
+			game_indiSprite.destroy();
+			ModuleHandler.deactivateModule('devInfoActivator');
+		}
     }
 
 	public override function onSongRetry(e) {
 		super.onSongRetry(e);
-		checkAlpha();
-	}
-
-	function checkAlpha() {
-		testSprite.alpha = Assets.exists(jsonPath) ? 0.7 : 0;
-		// PolymodErrorHandler.showAlert("testSprite Alpha", testSprite.alpha); // An alternative to calling trace() since that's not available in 0.5.1
+		game_indiSprite.destroy();
+		ModuleHandler.deactivateModule('devInfoActivator');
 	}
 }

@@ -1,6 +1,7 @@
 {
   "title": "Dev Commentary Maker",
-  "description": ".",
+  "description": "Lets you add dev commentaries for your songs with ease!",
+  "author": "MAZ",
   "api_version": "0.5.1",
   "mod_version": "1.0.0",
   "license": "Apache-2.0"

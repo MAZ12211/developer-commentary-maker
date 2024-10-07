@@ -57,7 +57,7 @@ class devInfoSubstate extends MusicBeatSubState
 	* Example with Philly Nice Pico mix in the hard difficulty:
 	* data/songs/philly-nice/dev-commentaries/hard-pico-devCom.json
 	*/
-	var jsonPath:String = Paths.json("songs/" + game.currentSong.id + "/dev-commentaries/" + game.currentChart.difficulty + (game.currentChart.variation != null ? "-" + game.currentChart.variation : "") + "-devcom");
+	var jsonPath:String = Paths.json("songs/" + game.currentSong.id + "/dev-commentaries/" + game.currentChart.difficulty + (game.currentChart.variation != null ? "-" + game.currentChart.variation : "") + "-devCom");
 	var jsonData; // Shortcut to Json.parse(Assets.getText(jsonPath))
 
 	var authorsData:String; // Shortcut to Json.parse(Assets.getText(jsonPath)).authors
@@ -293,9 +293,6 @@ class devInfoSubstate extends MusicBeatSubState
 	You can't scale the images easily in the script
 	If the image is too big (game's screensize is `1280x720`) you have to manually scale them down in an image resizer online.
 	The example images' size in the template is `640x340`, it works well if you want a fixed size without too much time spent on trial and error.
-
-	There's a visual bug with the dev commentary icon if you change difficulties in the pause menu.
-	You can still access the dev commentary screen if the script finds any `difficulty-variation-devCom.json` files though.
 
 	There's no way for the player to know if your song has a dev commentary or not outside of `PlayState` (the screen you're playing the song in)
 	There'll be a better visual indicator in Freeplay once I either get smart enough (I'm so dumb seriously) or when V Slice gets more accessible by having more modding resources (i.e documentation or video tutorials).
