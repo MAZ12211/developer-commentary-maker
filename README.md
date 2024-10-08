@@ -24,4 +24,8 @@ This also works for Erect remixes and playable characters' mixes that have diffe
 - Image support! (optional to use)
 If you have something to say about a concept art or if you want to share and talk about a remastered art vs the old one, you can!
 
-[Check the wiki to know how to use it](linkhere)
+## Getting Started
+
+Check [HOTTOUSE.md][def] to know how to use it.
+
+[def]: https://github.com/MAZ12211/developer-commentary-maker/blob/main/HOWTOUSE.md
