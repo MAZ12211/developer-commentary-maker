@@ -244,6 +244,8 @@ class devInfoSubstate extends MusicBeatSubState
 	- Image support! (optional to use)
 	If you have something to say about a concept art or if you want to share and talk about a remastered art vs the old one, you can!
 
+	
+
 	Quick steps on how to use it:
 	1- Download [this template](https://github.com/MAZ12211/dev-commentary-maker/blob/main/data/songs/tutorial/dev-commentaries/normal-default-devCom.json)
 	2- Place it in `yourmod/data/songs/yoursong/dev-commentaries`.
@@ -295,5 +297,5 @@ class devInfoSubstate extends MusicBeatSubState
 	The example images' size in the template is `640x340`, it works well if you want a fixed size without too much time spent on trial and error.
 
 	There's no way for the player to know if your song has a dev commentary or not outside of `PlayState` (the screen you're playing the song in)
-	There'll be a better visual indicator in Freeplay once I either get smart enough (I'm so dumb seriously) or when V Slice gets more accessible by having more modding resources (i.e documentation or video tutorials).
+	There'll be a better visual indicator in Freeplay once I either get smart enough (I'm so dumb seriously) or when V Slice has more modding resources (i.e video tutorials or other mods made in V Slice).
 */
