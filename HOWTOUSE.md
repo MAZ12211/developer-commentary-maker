@@ -1,7 +1,7 @@
 # Quick steps on how to use it
 
-1- [Use the example folder as a template](https://github.com/MAZ12211/developer-commentary-maker/tree/main/example/data/songs/philly-nice/dev-commentaries) to know the proper path on where to put your commentary files.
-2- Rename the file name with your own.
+1. [Use the example folder as a template](https://github.com/MAZ12211/developer-commentary-maker/tree/main/example/data/songs/philly-nice/dev-commentaries) to know the proper path on where to put your commentary files.
+2. Rename the file name with your own.
 The filename format goes like this: `difficulty-variation-devCom.json` and they're placed in `yourmod/data/songs/yoursong/dev-commentaries` if you haven't noticed yet in the example folder.
 [Read the official FNF Modding Documentation if you're not sure what to replace the variation part.](https://funkincrew.github.io/funkin-modding-docs/02-custom-songs-and-custom-levels/02-04-what-are-variations.html)
 
@@ -13,8 +13,8 @@ The filename format goes like this: `difficulty-variation-devCom.json` and they'
 
 I hope you understand how it works now!
 
-4- Once you set up your commentary files and double check on the difficulty and the variation, launch the game and play your song.
-5- If it works, you should see a visual indicator that looks like a text bubble in the bottom left corner of the screen which means there's a new button in the pause menu called `Developer Commentary`.
+4. Once you set up your commentary files and double check on the difficulty and the variation, launch the game and play your song.
+5. If it works, you should see a visual indicator that looks like a text bubble in the bottom left corner of the screen which means there's a new button in the pause menu called `Developer Commentary`.
 
 ## JSON STRUCTURE
 
