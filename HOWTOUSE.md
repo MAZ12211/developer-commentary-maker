@@ -7,11 +7,13 @@ The filename format goes like this: `difficulty-variation-devCom.json` and they'
 
 ## Examples
 
-`erect-erect-devCom.json` will work in the `Erect` difficulty `Erect` variation (Erect remix).
-`hard-pico-devCom.json` will work in the `Hard` difficulty `Pico` variation (for playable characters).
-`normal-default-devCom.json` will work in the `Normal` difficulty `default` variation (pretty much what you want if you don't plan on remixes or playable characters).
+- `erect-erect-devCom.json` will work in the `Erect` difficulty `Erect` variation (Erect remix).
+- `hard-pico-devCom.json` will work in the `Hard` difficulty `Pico` variation (for playable characters).
+- `normal-default-devCom.json` will work in the `Normal` difficulty `default` variation (pretty much what you want if you don't plan on remixes or playable characters).
 
-I hope you understand how it works now!
+I hope you understand how it works now
+
+---
 
 4. Once you set up your commentary files and double check on the difficulty and the variation, launch the game and play your song.
 5. If it works, you should see a visual indicator that looks like a text bubble in the bottom left corner of the screen which means there's a new button in the pause menu called `Developer Commentary`.
