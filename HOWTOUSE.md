@@ -1,4 +1,5 @@
-Quick steps on how to use it:
+# Quick steps on how to use it
+
 1- Download [this template](https://github.com/MAZ12211/dev-commentary-maker/blob/main/data/songs/tutorial/dev-commentaries/normal-default-devCom.json)
 2- Place it in `yourmod/data/songs/yoursong/dev-commentaries`.
 3- Rename the file name with your own difficulty and variation.
