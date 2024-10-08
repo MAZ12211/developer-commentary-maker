@@ -2,7 +2,9 @@
 
 1. [Use the example folder as a template](https://github.com/MAZ12211/developer-commentary-maker/tree/main/example/data/songs/philly-nice/dev-commentaries) to know the proper path on where to put your commentary files.
 2. Rename the file name with your own.
+
 The filename format goes like this: `difficulty-variation-devCom.json` and they're placed in `yourmod/data/songs/yoursong/dev-commentaries` if you haven't noticed yet in the example folder.
+
 [Read the official FNF Modding Documentation if you're not sure what to replace the variation part.](https://funkincrew.github.io/funkin-modding-docs/02-custom-songs-and-custom-levels/02-04-what-are-variations.html)
 
 ## Examples
