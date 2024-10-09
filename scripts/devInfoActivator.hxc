@@ -49,6 +49,7 @@ class devInfoActivator extends Module {
 		super("devInfoActivator", 2);
 	}
 
+	// This is yoinked from the gameplay modifer script by riconuts
     override function onSubStateOpenBegin(event) {
 		var state = event.targetState;
 
