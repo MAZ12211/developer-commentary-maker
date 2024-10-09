@@ -39,10 +39,15 @@ if you don't want to deal with manual placements, my script will try placing the
 ## Helpful tips
 
 Use `F5` to hot reload your game to quickly check how the commentary looks in-game quickly if you're done writing and are busy with formatting.
+
 If your game says something along the lines of `invalid char X at position X`, use a JSON validation tool such as [jsonlint](https://jsonlint.com/). It'll tell you what's wrong with it.
+
 `Images` is, like mentioned before, entirely optional, you can remove it in the json file and just want to have `authors` and `commentary` only.
+
 This script isn't limited to working with only base game difficulties, it can work with your own difficulties like `Mania` or something like that, **as long as that custom difficulty is included in the metadata**, it should work fine without too much instability.
+
 Use `\n` to make new lines in case your text went off the screen.
+
 Use `\"qouted text\"` is used to make qouted text.
 
 ## Limitations & Known Issues
