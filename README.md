@@ -8,7 +8,7 @@
 > Instead, link this mod in your gamebanana/download page in the requirements section for the players to download!
 > And make sure to clarify that this is an optional dependency.
 
-This is a fnf mod that lets fnf modders add their own dev commentaries to any song in their own mod
+This is a FNF mod that lets FNF modders add their own dev commentaries to any song in their own mod
 without too much setup and code.
 
 ## Features

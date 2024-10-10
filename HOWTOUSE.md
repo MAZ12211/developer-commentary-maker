@@ -14,7 +14,7 @@ The filename format goes like this: `difficulty-variation-devCom.json` and they'
 - `normal-default-devCom.json` will work in the `Normal` difficulty `default` variation (pretty much what you want if you don't plan on remixes or playable characters).
 
 I hope you understand how it works now!
-Moving on to the text steps...
+Moving on to the next steps...
 
 ---
 
