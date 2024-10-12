@@ -59,21 +59,21 @@ class devInfoDetector extends Module {
 		if (Assets.exists(jsonPath)) {
 			game_indiSprite = new FunkinSprite(30, FlxG.height - 100);
 			game_indiSprite.loadTexture("devInfoIcon"); // Icon from FlatIcon (https://www.flaticon.com/free-icon/comment_3193015?term=message+bubble&related_id=3193015)
-			if (game_indiSprite != null) game_indiSprite.alpha = 0.7; // This bugs out if you change the difficulty in the pause menu
+			if (game_indiSprite != null) game_indiSprite.alpha = 0.7;
 			game_indiSprite.zIndex = game.camHUD.zIndex + 1000;
 			game_indiSprite.scrollFactor.set(0, 0);
 			game_indiSprite.cameras = [game.camHUD];
 			game.add(game_indiSprite);
 			ModuleHandler.activateModule('devInfoActivator');
 		} else {
-			game_indiSprite.destroy();
+			if (game_indiSprite != null) game_indiSprite.destroy();
 			ModuleHandler.deactivateModule('devInfoActivator');
 		}
     }
 
 	public override function onSongRetry(e) {
 		super.onSongRetry(e);
-		game_indiSprite.destroy();
+		if (game_indiSprite != null) game_indiSprite.destroy();
 		ModuleHandler.deactivateModule('devInfoActivator');
 	}
 }
