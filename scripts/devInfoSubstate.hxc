@@ -60,6 +60,10 @@ class devInfoSubstate extends MusicBeatSubState
 
 	var defaultXpos = 20; // Default X position for hud placement
 	var defaultYpos = 15; // Default Y position for hud placement
+
+	var imgXPos;
+	var imgYPos;
+
 	var fadeInTimer = 1.8; // How long it takes for the text and images to fade in
 
 	var allowInput_ = false; // Used to prevent inputs while the text is fading in (copied from source code)
@@ -110,8 +114,8 @@ class devInfoSubstate extends MusicBeatSubState
 
 			// Check if your json file has images
 			if (imagesData != null) {
-				var imgXPos = defaultXpos + 60; // 60px left padding so description text doesn't go out of bounds
-				var imgYPos = defaultYpos + infoText.height + 50;
+				imgXPos = defaultXpos + 60; // 60px left padding so description text doesn't go out of bounds
+				imgYPos = defaultYpos + infoText.height + 50;
 				for (image in imagesData) {
 					// Check for image path
 					var imgPath = Paths.file("data/songs/" + game.currentSong.id + "/dev-commentaries/" + image.path + ".png");
@@ -139,8 +143,10 @@ class devInfoSubstate extends MusicBeatSubState
 							imgDesc.scrollFactor.set(0, 0);
 							imgDesc.wordWrap = false;
 
-							imgDesc.x = img.x + (img.width - imgDesc.width) / 2; // Center text
-							imgDesc.y = img.y + img.height + 10; // 10px up padding
+							imgDesc.setPosition(
+								img.x + (img.width - imgDesc.width) / 2, // Center text
+								img.y + img.height + 10 // 10px up padding
+							);
 							imgDesc.text = image.desc; // will look for description text in an image
 							imgDesc.alpha = 0;
 							imgDescs.push(imgDesc);
@@ -191,7 +197,8 @@ class devInfoSubstate extends MusicBeatSubState
 			for (imgDesc in imgDescs) if (imgDesc != null) imgDesc.y += 5 * 60 * elapsed; // Null check here is necessary because you can have an image without alt description
 			for (img in imagesArray) if (img != null) img.y += 5 * 60 * elapsed; // Same point
 		}
-		if (controls.UI_DOWN) {
+		var lastImage = imagesArray[imagesArray.length-1];
+		if (controls.UI_DOWN && (lastImage.isOnScreen() || infoText.isOnScreen())) {
 			authors.y -= 5 * 60 * elapsed;
 			infoText.y -= 5 * 60 * elapsed;
 			for (imgDesc in imgDescs) if (imgDesc != null) imgDesc.y -= 5 * 60 * elapsed;
