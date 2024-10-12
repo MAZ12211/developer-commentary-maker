@@ -1,6 +1,6 @@
 ## Adding this mod as an optional dependency
 
-As of writing this, the mod's title is `Dev Commentary Maker` with `1.0.0` being the stable version to use.
+As of writing this, the mod's title is `Dev Commentary Maker` with `1.0.1` being the stable version to use.
 
 [Here's the official documintation on polymod meta data file](https://funkincrew.github.io/funkin-modding-docs/01-fundamentals/01-01-the-metadata-file.html)
 
