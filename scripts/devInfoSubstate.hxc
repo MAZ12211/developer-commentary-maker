@@ -97,6 +97,7 @@ class devInfoSubstate extends MusicBeatSubState
 			* I used `PolymodErrorHandler.showAlert()` as an alternative to calling `trace()`
 			* because as far as I'm concerned (I've tested this several times), it's impossible to debug hscript scripts in 0.5.1
 			* https://github.com/FunkinCrew/Funkin/issues/3497
+			* Update (0.5.2): Still doesn't work.
 			*/
 
 			// Check for author data (defaulted to "unknown")
@@ -130,6 +131,7 @@ class devInfoSubstate extends MusicBeatSubState
 						);
 						img.alpha = 0;
 						img.loadGraphic(imgPath);
+						img.scrollFactor.set(0, 0);
 						imagesArray.push(img);
 						add(img);
 						// Vertical spacing between images (very janky way of doing it but it works)
@@ -197,8 +199,15 @@ class devInfoSubstate extends MusicBeatSubState
 			for (imgDesc in imgDescs) if (imgDesc != null) imgDesc.y += 5 * 60 * elapsed; // Null check here is necessary because you can have an image without alt description
 			for (img in imagesArray) if (img != null) img.y += 5 * 60 * elapsed; // Same point
 		}
-		var lastImage = imagesArray[imagesArray.length-1];
-		if (controls.UI_DOWN && (lastImage.isOnScreen() || infoText.isOnScreen())) {
+
+		// I don't like this implementation but I couldn't figure out how to do it like how a webpage handles it
+		var canScrollDown:Bool;
+		var lastImage = imagesArray[imagesArray.length - 1];
+
+		if (lastImage != null && (lastImage.isOnScreen() || infoText.isOnScreen())) canScrollDown = true;
+		else canScrollDown = false;
+
+		if (controls.UI_DOWN && canScrollDown) {
 			authors.y -= 5 * 60 * elapsed;
 			infoText.y -= 5 * 60 * elapsed;
 			for (imgDesc in imgDescs) if (imgDesc != null) imgDesc.y -= 5 * 60 * elapsed;
