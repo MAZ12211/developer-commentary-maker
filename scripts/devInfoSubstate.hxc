@@ -69,12 +69,16 @@ class devInfoSubstate extends MusicBeatSubState
 
 	var allowInput_ = false; // Used to prevent inputs while the text is fading in (copied from source code)
 	
+	var debugText:FlxText;
 	public function new() {
 		super("devInfoSubstate", 3);
 	}
 
 	public override function create():Void {
 		super.create();
+		debugText = new FlxText(FlxG.width - 200, 300);
+		add(debugText);
+
 		authors = new FlxText(defaultXpos, defaultYpos, FlxG.width - 20, null, null);
 		authors.setFormat(Paths.font("vcr.ttf"), 18, 0xFFffffff, "left");
 		authors.scrollFactor.set(0, 0);
@@ -173,36 +177,34 @@ class devInfoSubstate extends MusicBeatSubState
 		} else {
 			// Error message if the JSON file isn't found in the proper path
 			// It's kinda impossible to get this because of the detector script
-			PolymodErrorHandler.showAlert('JSON file not found', "Couldn't find " + game.currentChart.difficulty + "-devCom" + ".json in " + jsonPath);
+			PolymodErrorHandler.showAlert('JSON file not found', "Couldn't find " + game.currentChart.difficulty + (game.currentChart.variation != null ? "-" + game.currentChart.variation : "") + "-devCom" + ".json in " + jsonPath);
 			super.close(); // Close the substate after viewing the error
 		}
 		// the arrows are created here due to layering issues
-		upArrow = new FlxText(FlxG.width - 60, FlxG.height / 2 - 90, null, "↑");
-		upArrow.setFormat(Paths.font("vcr.ttf"), 80, 0xFFffffff, "left");
-		upArrow.scrollFactor.set(0, 0);
-		upArrow.bold = true;
-		upArrow.alpha = 0;
-		add(upArrow);
+		upArrow = new FlxText(FlxG.width - defaultXpos * 4, FlxG.height / 2 - 90, null, "↑");
+		downArrow = new FlxText(FlxG.width - defaultXpos * 4, FlxG.height / 2 - 30, null, "↓");
+		for (arrows in [upArrow, downArrow]) {
+			arrows.setFormat(Paths.font("vcr.ttf"), 80, 0xFFffffff, "right");
+			arrows.setBorderStyle(FlxTextBorderStyle.OUTLINE, 0xFF000000, 5);
+			arrows.scrollFactor.set(0, 0);
+			arrows.bold = true;
+			arrows.alpha = 0;
+			arrows.y += 5;
+			add(arrows);
+		}
 
-		downArrow = new FlxText(FlxG.width - 60, FlxG.height / 2 - 30, null, "↓");
-		downArrow.setFormat(Paths.font("vcr.ttf"), 80, 0xFFffffff, "left");
-		downArrow.scrollFactor.set(0, 0);
-		downArrow.bold = true;
-		downArrow.alpha = 0;
-		add(downArrow);
-
-		function tweenIn(obj, ?delay:Float = 0) {
-			FlxTween.tween(obj, {alpha: 1, y: obj.y + 5}, fadeInTimer, {ease: FlxEase.quartOut, startDelay: delay, onComplete: function(_) {
+		function tweenIn(obj, alpha:Float, ?delay:Float = 0) {
+			FlxTween.tween(obj, {alpha: alpha, y: obj.y + 5}, fadeInTimer, {ease: FlxEase.quartOut, startDelay: delay, onComplete: function(_) {
 				allowInput_ = true;
 			}});
 		}
 		// They're placed here just for organization
-		tweenIn(upArrow, 0.5);
-		tweenIn(downArrow, 0.5);
-		tweenIn(authors);
-		tweenIn(infoText);
-		for (img in imagesArray) tweenIn(img);
-		for (imgDesc in imgDescs) tweenIn(imgDesc);
+		tweenIn(upArrow, (imagesData != null ? 0.5 : 1), 0.1);
+		tweenIn(downArrow, (imagesData != null ? 0.5 : 1), 0.1);
+		tweenIn(authors, 1);
+		tweenIn(infoText, 1);
+		for (img in imagesArray) tweenIn(img, 1);
+		for (imgDesc in imgDescs) tweenIn(imgDesc, 1);
 
 	}
 
@@ -216,6 +218,7 @@ class devInfoSubstate extends MusicBeatSubState
 			infoText.y += 5 * 60 * elapsed; // No null check because there's no point if there'll be an error message
 			for (imgDesc in imgDescs) if (imgDesc != null) imgDesc.y += 5 * 60 * elapsed; // Null check here is necessary because you can have an image without alt description
 			for (img in imagesArray) if (img != null) img.y += 5 * 60 * elapsed; // Same point
+
 			upArrow.scale.set(0.9, 0.9);
 			upArrow.color = 0xFFFFFF00;
 		} else {
@@ -227,7 +230,8 @@ class devInfoSubstate extends MusicBeatSubState
 		var canScrollDown:Bool;
 		var lastImage = imagesArray[imagesArray.length - 1];
 
-		if (lastImage != null && (lastImage.isOnScreen() || infoText.isOnScreen())) canScrollDown = true;
+		if (lastImage != null && lastImage.isOnScreen()) canScrollDown = true;
+		else if (infoText.isOnScreen()) canScrollDown = true;
 		else canScrollDown = false;
 
 		if (controls.UI_DOWN && canScrollDown) {
@@ -235,13 +239,14 @@ class devInfoSubstate extends MusicBeatSubState
 			infoText.y -= 5 * 60 * elapsed;
 			for (imgDesc in imgDescs) if (imgDesc != null) imgDesc.y -= 5 * 60 * elapsed;
 			for (img in imagesArray) if (img != null) img.y -= 5 * 60 * elapsed;
+
 			downArrow.scale.set(0.9, 0.9);
 			downArrow.color = 0xFFFFFF00;
 		} else {
 			downArrow.scale.set(1, 1);
 			downArrow.color = 0xFFffffff;
 		}
-
+		
 		if (controls.UI_DOWN_P || controls.UI_UP_P || controls.UI_UP_R || controls.UI_DOWN_R) {
 			FunkinSound.playOnce(randomKeyboardSFX);
 		}
