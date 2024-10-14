@@ -38,6 +38,8 @@ class devInfoSubstate extends MusicBeatSubState
 	var authors:FlxText; // Person(s) who wrote the commentary
 	var infoText:FlxText; // Commentary text
 	var game = PlayState.instance;
+	var upArrow:FlxText;
+	var downArrow:FlxText;
 
 	/*
 	* jsonPath will look for: data/songs/songID/dev-commentaries/difficulty-variation-devCom.json
@@ -60,7 +62,6 @@ class devInfoSubstate extends MusicBeatSubState
 
 	var defaultXpos = 20; // Default X position for hud placement
 	var defaultYpos = 15; // Default Y position for hud placement
-
 	var imgXPos;
 	var imgYPos;
 
@@ -175,29 +176,51 @@ class devInfoSubstate extends MusicBeatSubState
 			PolymodErrorHandler.showAlert('JSON file not found', "Couldn't find " + game.currentChart.difficulty + "-devCom" + ".json in " + jsonPath);
 			super.close(); // Close the substate after viewing the error
 		}
+		// the arrows are created here due to layering issues
+		upArrow = new FlxText(FlxG.width - 60, FlxG.height / 2 - 90, null, "↑");
+		upArrow.setFormat(Paths.font("vcr.ttf"), 80, 0xFFffffff, "left");
+		upArrow.scrollFactor.set(0, 0);
+		upArrow.bold = true;
+		upArrow.alpha = 0;
+		add(upArrow);
 
-		function tweenIn(obj, fadeInTimer:Float) {
-			FlxTween.tween(obj, {alpha: 1, y: obj.y + 5}, fadeInTimer, {ease: FlxEase.quartOut, onComplete: function(_) {
+		downArrow = new FlxText(FlxG.width - 60, FlxG.height / 2 - 30, null, "↓");
+		downArrow.setFormat(Paths.font("vcr.ttf"), 80, 0xFFffffff, "left");
+		downArrow.scrollFactor.set(0, 0);
+		downArrow.bold = true;
+		downArrow.alpha = 0;
+		add(downArrow);
+
+		function tweenIn(obj, ?delay:Float = 0) {
+			FlxTween.tween(obj, {alpha: 1, y: obj.y + 5}, fadeInTimer, {ease: FlxEase.quartOut, startDelay: delay, onComplete: function(_) {
 				allowInput_ = true;
 			}});
 		}
 		// They're placed here just for organization
-		tweenIn(authors, fadeInTimer);
-		tweenIn(infoText, fadeInTimer);
-		for (img in imagesArray) tweenIn(img, fadeInTimer);
-		for (imgDesc in imgDescs) tweenIn(imgDesc, fadeInTimer);
+		tweenIn(upArrow, 0.5);
+		tweenIn(downArrow, 0.5);
+		tweenIn(authors);
+		tweenIn(infoText);
+		for (img in imagesArray) tweenIn(img);
+		for (imgDesc in imgDescs) tweenIn(imgDesc);
 
 	}
 
 	public override function update(elapsed:Float):Void {
 		super.update(elapsed);
 		if (!allowInput_) return;
+		var randomKeyboardSFX = Paths.sound("chartingSounds/keyboard" + FlxG.random.int(1, 3));
 
 		if (controls.UI_UP && authors.y <= defaultYpos /*So you wouldn't be able to scroll past the top*/) {
 			authors.y += 5 * 60 * elapsed; // No null check because it's added even if you forgot to have it in your json file (defaulted to "unknown" again)
 			infoText.y += 5 * 60 * elapsed; // No null check because there's no point if there'll be an error message
 			for (imgDesc in imgDescs) if (imgDesc != null) imgDesc.y += 5 * 60 * elapsed; // Null check here is necessary because you can have an image without alt description
 			for (img in imagesArray) if (img != null) img.y += 5 * 60 * elapsed; // Same point
+			upArrow.scale.set(0.9, 0.9);
+			upArrow.color = 0xFFFFFF00;
+		} else {
+			upArrow.scale.set(1, 1);
+			upArrow.color = 0xFFffffff;
 		}
 
 		// I don't like this implementation but I couldn't figure out how to do it like how a webpage handles it
@@ -212,10 +235,19 @@ class devInfoSubstate extends MusicBeatSubState
 			infoText.y -= 5 * 60 * elapsed;
 			for (imgDesc in imgDescs) if (imgDesc != null) imgDesc.y -= 5 * 60 * elapsed;
 			for (img in imagesArray) if (img != null) img.y -= 5 * 60 * elapsed;
+			downArrow.scale.set(0.9, 0.9);
+			downArrow.color = 0xFFFFFF00;
+		} else {
+			downArrow.scale.set(1, 1);
+			downArrow.color = 0xFFffffff;
+		}
+
+		if (controls.UI_DOWN_P || controls.UI_UP_P || controls.UI_UP_R || controls.UI_DOWN_R) {
+			FunkinSound.playOnce(randomKeyboardSFX);
 		}
 
 		if (controls.BACK) {
-			FunkinSound.playOnce(Paths.sound("chartingSounds/noteErase"));
+			FunkinSound.playOnce(randomKeyboardSFX);
 			super.close();
 		}
 	}
