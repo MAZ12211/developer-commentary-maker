@@ -69,16 +69,12 @@ class devInfoSubstate extends MusicBeatSubState
 
 	var allowInput_ = false; // Used to prevent inputs while the text is fading in (copied from source code)
 	
-	var debugText:FlxText;
 	public function new() {
 		super("devInfoSubstate", 3);
 	}
 
 	public override function create():Void {
 		super.create();
-		debugText = new FlxText(FlxG.width - 200, 300);
-		add(debugText);
-
 		authors = new FlxText(defaultXpos, defaultYpos, FlxG.width - 20, null, null);
 		authors.setFormat(Paths.font("vcr.ttf"), 18, 0xFFffffff, "left");
 		authors.scrollFactor.set(0, 0);
