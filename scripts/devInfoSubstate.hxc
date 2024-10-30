@@ -53,11 +53,11 @@ class devInfoSubstate extends MusicBeatSubState
 
 	// Array for storing the images
 	var imagesArray:Array<FlxSprite> = [];
-	// Array for storing their descriptions
 	/*
 	There's probably a smarter way to do this with maps or something but I have no clue if hscript supports or not
 	either way it's too much trouble to figure out (took a while to implement it)
 	*/
+	// Array for storing their descriptions
 	var imgDescs:Array<FlxText> = [];
 
 	var defaultXpos = 20; // Default X position for hud placement
