@@ -1,7 +1,10 @@
 {
   "title": "Dev Commentary Maker",
   "description": "Lets you add dev commentaries for your songs with ease!",
-  "author": "MAZ",
+  "contributors": [
+   {"name": "MAZ12211", "role": "Coded everything"},
+   {"name": "Funkin's discussions page", "role": "code help", "url": "https://github.com/FunkinCrew/Funkin/discussions"}
+  ],
   "api_version": "0.5.3",
   "mod_version": "1.0.3",
   "license": "MIT"
