@@ -1,15 +1,10 @@
-# Developer Commentary Maker
-
-> [!IMPORTANT]
-> This mod is meant to be used as an **optional** dependency!
+# Dev Commentary Maker
 
 > [!IMPORTANT]
 > Do not bundle this mod with your own mod if you plan to use this!
 > Instead, link this mod in your gamebanana/download page in the requirements section for the players to download!
-> And make sure to clarify that this is an optional dependency.
 
-This is a FNF mod that lets FNF modders add their own dev commentaries to any song in their own mod
-without too much setup and code.
+This is a mod that allows modders and contributors to add dev commentaries in the game without too much setup and code.
 
 ## Features
 

@@ -1,12 +1,3 @@
-## Adding this mod as an optional dependency
-
-As of writing this, the mod's title is `Dev Commentary Maker` with `1.0.2` being the recommended version to use.
-
-[Here's the official documintation on polymod meta data file](https://funkincrew.github.io/funkin-modding-docs/01-fundamentals/01-01-the-metadata-file.html)
-
-[and another one that is a bit more detailed but still a short read](https://polymod.io/docs/dependencies/).
-I recommend this one more because it tells you about optional dependencies and how to deal with version numbers.
-
 ## Quick steps on how to use it
 
 1. [Use the example folder as a template](https://github.com/MAZ12211/developer-commentary-maker/tree/main/example/data/songs/philly-nice/dev-commentaries) to know the proper path on where to put your commentary files.
