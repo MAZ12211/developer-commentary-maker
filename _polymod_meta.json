@@ -3,7 +3,8 @@
   "description": "Lets you add dev commentaries for your songs with ease!",
   "contributors": [
    {"name": "MAZ12211", "role": "Coded everything"},
-   {"name": "Funkin's discussions page", "role": "code help", "url": "https://github.com/FunkinCrew/Funkin/discussions"}
+   {"name": "Funkin's discussions page", "role": "code help", "url": "https://github.com/FunkinCrew/Funkin/discussions"},
+   {"name": "Cracsthor", "role": "Made PhantomMuff font used for the thumbnail and polymod icon", "url": "https://gamebanana.com/members/1844732"}  
   ],
   "api_version": "0.5.3",
   "mod_version": "1.0.3",
